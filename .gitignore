@@ -3,3 +3,6 @@ dist/
 build/
 .DS_Store
 *.log
+
+# Personal seed data (real pay figures) - never commit.
+src/seed/
