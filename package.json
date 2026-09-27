@@ -1,0 +1,39 @@
+{
+  "name": "salary-history",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/main.ts",
+  "financeExtension": {
+    "id": "salary-history",
+    "displayName": "Salary History",
+    "version": "0.1.0",
+    "description": "Salary History extension",
+    "themeColor": "#6366F1",
+    "activationEvents": ["onView:salary-history"],
+    "contributions": {
+      "views": [{ "id": "salary-history", "name": "Salary History", "icon": "assets/icon.svg" }],
+      "commands": [{ "id": "salary-history.hello", "title": "Salary History: Hello" }],
+      "navigation": [{ "id": "salary-history-main", "label": "Salary History", "command": "salary-history.hello", "group": "Salary History" }],
+      "configuration": [
+        { "key": "salary-history.themeColor", "type": "string", "label": "Accent color for icons, topbar actions, and in-view highlights (hex).", "default": "#6366F1", "pattern": "^#[0-9A-Fa-f]{6}$", "formatHint": "#RRGGBB", "placeholder": "#6366F1" }
+      ],
+      "allowedCommands": ["salary-history.hello"],
+      "allowedUiEvents": []
+    },
+    "main": "src/main.ts"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "node D:/finance_flow_ai/scripts/sdk/cli.mjs build .",
+    "version:bump": "node scripts/version-bump.mjs",
+    "release": "node scripts/version-bump.mjs && node D:/finance_flow_ai/scripts/sdk/cli.mjs build ."
+  },
+  "devDependencies": {
+    "vite": "^5.4.0",
+    "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "lit": "^3.1.0"
+  }
+}
