@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Salary History — dev</title>
+    <title>Salary History - dev</title>
     <link rel="stylesheet" href="/src/styles/ext-tokens.css" />
     <style>
       #view-switcher { position:fixed; top:8px; right:8px; z-index:9999; padding:4px 8px;
@@ -18,10 +18,13 @@
       import { createMockFinance } from '/src/mock/finance-mock.ts';
       import * as main from '/src/main.ts';
 
-      // ---- add view tags here when you create new views ----
       const VIEWS = [
-        { tag: 'salary-history-view', label: 'Salary History' },
-        // { tag: 'salary-history-detail-view', label: 'Detail View' },
+        { tag: 'salary-orchestrator', label: 'Orchestrator' },
+        { tag: 'payslip-list', label: 'Pay History' },
+        { tag: 'payslip-form', label: 'Payslip form' },
+        { tag: 'pay-rate-history-view', label: 'Rate history' },
+        { tag: 'rate-row-form', label: 'Rate form' },
+        { tag: 'reorder-sections-modal', label: 'Reorder sections' },
       ];
 
       const switcher = document.getElementById('view-switcher');
@@ -40,7 +43,7 @@
         const el = document.createElement(v.tag);
         document.getElementById('app').appendChild(el);
         current = el;
-        if (typeof main.activate === 'function') await main.activate(finance, { viewId: v.tag.replace('-view', '') });
+        if (typeof main.activate === 'function') await main.activate(finance, { viewId: 'salary' });
       }
 
       switcher.addEventListener('change', (e) => mountView(+e.target.value));

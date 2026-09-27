@@ -8,30 +8,401 @@
     "id": "salary-history",
     "displayName": "Salary History",
     "version": "0.1.0",
-    "description": "Salary History extension",
-    "themeColor": "#6366F1",
-    "activationEvents": ["onView:salary-history"],
+    "themeColor": "#F59E0B",
+    "description": "Payslip entry, derived breakdown, and effective-dated rate history tracking.",
+    "activationEvents": [
+      "onStartup",
+      "onView:salary"
+    ],
     "contributions": {
-      "views": [{ "id": "salary-history", "name": "Salary History", "icon": "assets/icon.svg" }],
-      "commands": [{ "id": "salary-history.hello", "title": "Salary History: Hello" }],
-      "navigation": [{ "id": "salary-history-main", "label": "Salary History", "command": "salary-history.hello", "group": "Salary History" }],
-      "configuration": [
-        { "key": "salary-history.themeColor", "type": "string", "label": "Accent color for icons, topbar actions, and in-view highlights (hex).", "default": "#6366F1", "pattern": "^#[0-9A-Fa-f]{6}$", "formatHint": "#RRGGBB", "placeholder": "#6366F1" }
+      "views": [
+        {
+          "id": "salary",
+          "name": "Salary",
+          "icon": "assets/icon.svg"
+        }
       ],
-      "allowedCommands": ["salary-history.hello"],
-      "allowedUiEvents": []
+      "commands": [
+        {
+          "id": "salary.show-pay-history",
+          "title": "View: Pay History",
+          "keybinding": "Ctrl+Alt+H"
+        },
+        {
+          "id": "salary.show-pay-rate-history",
+          "title": "View: Pay Rate History",
+          "keybinding": "Ctrl+Alt+R"
+        }
+      ],
+      "allowedCommands": [
+        "salary.show-pay-history",
+        "salary.show-pay-rate-history"
+      ],
+      "navigation": [
+        {
+          "id": "salary-pay-history",
+          "label": "Pay History",
+          "command": "salary.show-pay-history",
+          "group": "Salary",
+          "icon": "H"
+        },
+        {
+          "id": "salary-pay-rate-history",
+          "label": "Pay Rate History",
+          "command": "salary.show-pay-rate-history",
+          "group": "Salary",
+          "icon": "R"
+        }
+      ],
+      "allowedUiEvents": [
+        "payslip-add-request",
+        "payslip-create",
+        "payslip-edit-request",
+        "payslip-edit",
+        "payslip-cancel",
+        "payslip-delete",
+        "rate-edit-request",
+        "rate-view-request",
+        "rate-add-request",
+        "rate-create",
+        "rate-edit",
+        "rate-form-cancel",
+        "section-order-change"
+      ],
+      "configuration": [
+        {
+          "key": "salary-history.themeColor",
+          "type": "string",
+          "label": "Accent color for Salary History icons and panel highlights (hex).",
+          "default": "#F59E0B",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "formatHint": "#RRGGBB",
+          "placeholder": "#F59E0B"
+        },
+        {
+          "key": "salary-history.paygToleranceDollars",
+          "type": "number",
+          "label": "PAYG Tolerance ($)",
+          "default": 5.0
+        }
+      ]
     },
+    "tables": [
+      {
+        "name": "salary_history_pay_slips",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primary": true,
+            "autoIncrement": true
+          },
+          {
+            "name": "account_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "pay_period_start",
+            "type": "date",
+            "nullable": false
+          },
+          {
+            "name": "pay_period_end",
+            "type": "date",
+            "nullable": false
+          },
+          {
+            "name": "pay_date",
+            "type": "date",
+            "nullable": false
+          },
+          {
+            "name": "finance_year",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "gross",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "net",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "currency",
+            "type": "text",
+            "nullable": false,
+            "default": "AUD"
+          },
+          {
+            "name": "shift_allowance",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "base_hourly",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "overtime_1_5x",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "overtime_2_0x",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "holiday_leave_loading",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "holiday_pay",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "public_holiday",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "payg_withholding",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "superannuation_guarantee",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "personal_leave",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "holiday_leave_accrual_hours",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "regular_hours",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "shift_hours",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "overtime_1_5_hours",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "overtime_2_0_hours",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "holiday_hours",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "public_holiday_hours",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "personal_leave_hours",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "notes",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "nullable": false,
+            "default": "now"
+          },
+          {
+            "name": "updated_at",
+            "type": "datetime",
+            "nullable": false,
+            "default": "now"
+          }
+        ]
+      },
+      {
+        "name": "salary_history_rate_history",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primary": true,
+            "autoIncrement": true
+          },
+          {
+            "name": "effective_from",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "effective_to",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "base_hourly_rate",
+            "type": "real",
+            "nullable": false,
+            "default": 0,
+            "min": 0
+          },
+          {
+            "name": "standard_hours_per_week",
+            "type": "real",
+            "nullable": false,
+            "default": 38,
+            "min": 0
+          },
+          {
+            "name": "shift_allowance_multiplier",
+            "type": "real",
+            "nullable": false,
+            "default": 0.15,
+            "min": 0
+          },
+          {
+            "name": "shift_allowance_hours_per_week",
+            "type": "real",
+            "nullable": false,
+            "default": 38,
+            "min": 0
+          },
+          {
+            "name": "overtime_1_5_multiplier",
+            "type": "real",
+            "nullable": false,
+            "default": 1.5,
+            "min": 0
+          },
+          {
+            "name": "overtime_2_0_multiplier",
+            "type": "real",
+            "nullable": false,
+            "default": 2.0,
+            "min": 0
+          },
+          {
+            "name": "superannuation_rate",
+            "type": "real",
+            "nullable": false,
+            "default": 0.12,
+            "min": 0
+          },
+          {
+            "name": "holiday_leave_loading_rate",
+            "type": "real",
+            "nullable": false,
+            "default": 0.175,
+            "min": 0
+          },
+          {
+            "name": "accrual_rate_per_week",
+            "type": "real",
+            "nullable": false,
+            "default": 2.92,
+            "min": 0
+          },
+          {
+            "name": "notes",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "nullable": false,
+            "default": "now"
+          },
+          {
+            "name": "updated_at",
+            "type": "datetime",
+            "nullable": false,
+            "default": "now"
+          }
+        ]
+      }
+    ],
     "main": "src/main.ts"
   },
   "scripts": {
     "dev": "vite",
     "build": "node D:/finance_flow_ai/scripts/sdk/cli.mjs build .",
+    "test": "vitest run",
     "version:bump": "node scripts/version-bump.mjs",
     "release": "node scripts/version-bump.mjs && node D:/finance_flow_ai/scripts/sdk/cli.mjs build ."
   },
   "devDependencies": {
     "vite": "^5.4.0",
-    "typescript": "^5.5.0"
+    "typescript": "^5.5.0",
+    "vitest": "^4.1.9",
+    "happy-dom": "^20.10.6"
   },
   "dependencies": {
     "lit": "^3.1.0"
