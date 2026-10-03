@@ -1,13 +1,13 @@
 {
   "name": "salary-history",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "private": true,
   "type": "module",
   "main": "src/main.ts",
   "financeExtension": {
     "id": "salary-history",
     "displayName": "Salary History",
-    "version": "0.1.2",
+    "version": "0.1.4",
     "themeColor": "#F59E0B",
     "description": "Payslip entry, derived breakdown, and effective-dated rate history tracking.",
     "activationEvents": [

@@ -273,9 +273,9 @@ export class PayRateHistoryView extends LitElement {
   render(): unknown {
     return html`
       <div class="view-scroll">
-      <div class="topbar">
-        <span class="crumb-current">Pay Rate History</span>
-        <div class="spacer"></div>
+<div class="topbar">
+            <span class="crumb-current">Salary History · Rate History</span>
+            <div class="spacer"></div>
         <button class="filter-btn" data-testid="add-rate" @click="${this._onAdd}">+ New Rate</button>
       </div>
 

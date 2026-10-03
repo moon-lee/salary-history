@@ -152,19 +152,8 @@ export class PayslipForm extends LitElement {
       .section.accrual {
         border-color: #c2913a;
       }
-      .reorder-btn {
-        background: transparent;
-        color: #858585;
-        border: 1px solid #3e3e3e;
-        padding: 4px 10px;
-        border-radius: 3px;
-        font-size: var(--ff-font-base, 14px);
-        cursor: pointer;
-      }
-      .reorder-btn:hover {
-        border-color: #007acc;
-        color: #d4d4d4;
-      }
+
+
       input[readonly],
       input:disabled {
         background: #2a2a2a;
