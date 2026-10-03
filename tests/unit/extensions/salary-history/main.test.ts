@@ -60,12 +60,15 @@ function makeFinance() {
 }
 
 describe('salary-history activate (Task 12)', () => {
-  it('does not seed a default rate row when rate history is empty and registers both commands', async () => {
+  it('does not seed a default rate row when rate history is empty and registers every command', async () => {
     const { finance, registered, store } = makeFinance();
     await activate(finance);
 
     expect(store['salary_history_rate_history']).toHaveLength(0);
-    expect(registered.map((r) => r.id)).toEqual([
+    // `salary-history.refresh` backs the Quick Links "Refresh" nav item.
+    // Sorted: registration order is not part of what this test is about.
+    expect(registered.map((r) => r.id).sort()).toEqual([
+      'salary-history.refresh',
       'salary.show-pay-history',
       'salary.show-pay-rate-history',
     ]);
@@ -95,10 +98,21 @@ describe('salary-history activate (Task 12)', () => {
     ]);
     // onStartup keeps the pay service registered before dashboard buildAggregator (cold-start).
     expect(manifest.activationEvents).toEqual(['onStartup', 'onView:salary']);
-    expect(manifest.contributions.commands.map((c: { id: string }) => c.id)).toEqual([
-      'salary.show-pay-history',
-      'salary.show-pay-rate-history',
-    ]);
+    expect(manifest.contributions.commands.map((c: { id: string }) => c.id).sort()).toEqual(
+      [
+        'salary-history.refresh',
+        'salary.show-pay-history',
+        'salary.show-pay-rate-history',
+      ].sort(),
+    );
+    // Quick Links "Refresh" nav item, matching taxflow and dashboard.
+    expect(manifest.contributions.navigation).toContainEqual({
+      id: 'salary-history-refresh',
+      label: 'Refresh',
+      command: 'salary-history.refresh',
+      group: 'Quick Links',
+    });
+    expect(manifest.contributions.allowedCommands).toContain('salary-history.refresh');
   });
 
   it('commands requestMount the single salary panel with child view', async () => {

@@ -1,13 +1,13 @@
 {
   "name": "salary-history",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "main": "src/main.ts",
   "financeExtension": {
     "id": "salary-history",
     "displayName": "Salary History",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "themeColor": "#F59E0B",
     "description": "Payslip entry, derived breakdown, and effective-dated rate history tracking.",
     "activationEvents": [
@@ -32,13 +32,24 @@
           "id": "salary.show-pay-rate-history",
           "title": "View: Pay Rate History",
           "keybinding": "Ctrl+Alt+R"
+        },
+        {
+          "id": "salary-history.refresh",
+          "title": "Refresh Salary History"
         }
       ],
       "allowedCommands": [
         "salary.show-pay-history",
-        "salary.show-pay-rate-history"
+        "salary.show-pay-rate-history",
+        "salary-history.refresh"
       ],
       "navigation": [
+        {
+          "id": "salary-history-refresh",
+          "label": "Refresh",
+          "command": "salary-history.refresh",
+          "group": "Quick Links"
+        },
         {
           "id": "salary-pay-history",
           "label": "Pay History",

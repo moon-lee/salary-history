@@ -104,6 +104,18 @@ export async function activate(
    const settingsMountData = { defaultCurrency, financialYearStart, financialYearCurrent };
   logger.info('activate', { defaultCurrency, financialYearStart, financialYearCurrent });
 
+  // Nav-bar Refresh (Quick Links group), same pattern as taxflow. pushData
+  // rather than requestMount: the latter would create the panel if it were
+  // closed, popping a view the user had deliberately shut. Dropped when nothing
+  // is mounted, which is what a Refresh item should do.
+  finance.commands.registerCommand('salary-history.refresh', 'Refresh Salary History', async () => {
+    try {
+      await finance.ui?.pushData?.('salary', { refreshedAt: Date.now() });
+    } catch (err) {
+      logger.error('salary-history refresh failed', err);
+    }
+  });
+
    // Register public pay service + commands in ALL contexts.
    const payAdapter = createPublicPayAdapter(finance);
    finance.services?.register('pay', payAdapter as unknown as DomainServiceImpl);
