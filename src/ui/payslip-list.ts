@@ -311,7 +311,10 @@ export class PayslipList extends LitElement {
     }
     const fyCurrent = await this.finance.settings.get('core.financialYear.current');
     if (typeof fyCurrent === 'string') {
-      this.financialYear = fyCurrent;
+      // Normalised, because the select's options are built from normalised
+      // values: storing the raw form (`2026-27` against an option of
+      // `2026-2027`) would leave nothing selected on load.
+      this.financialYear = fyCurrent ? normalizeFinanceYear(fyCurrent) : '';
     }
   }
 
@@ -319,6 +322,27 @@ export class PayslipList extends LitElement {
     if (!this.financialYear) return this.payslips;
     const target = normalizeFinanceYear(this.financialYear);
     return this.payslips.filter(p => normalizeFinanceYear(p.finance_year) === target);
+  }
+
+  /** Finance years present in the loaded data, newest first. */
+  private get _availableYears(): string[] {
+    const seen = new Set<string>();
+    for (const p of this.payslips) {
+      if (p.finance_year) seen.add(normalizeFinanceYear(p.finance_year));
+    }
+    // The configured year may not be in the data yet, but it still belongs in
+    // the list so the select does not silently drop the current selection.
+    if (this.financialYear) seen.add(normalizeFinanceYear(this.financialYear));
+    return [...seen].sort().reverse();
+  }
+
+  private _onYearChange(e: Event): void {
+    this.financialYear = (e.target as HTMLSelectElement).value;
+    // The table paginates by index, so a shorter list can leave the page past
+    // the end; clamping keeps "Page 3 of 1" from ever being shown.
+    const pages = Math.max(1, Math.ceil(this._filteredPayslips.length / PAGE_SIZE));
+    if (this._page >= pages) this._page = Math.max(0, pages - 1);
+    (this as any).requestUpdate?.();
   }
 
   connectedCallback(): void {
@@ -475,12 +499,24 @@ export class PayslipList extends LitElement {
 
     return html`
       <div class="view-scroll">
-      <div class="topbar">
-        <span class="crumb-current">Salary History · Pay History</span>
-        <div class="spacer"></div>
-        <button class="filter-btn">⌕ Filter</button>
-        <button class="filter-btn" @click="${() => this._onAdd()}">+ Add Payslip</button>
-      </div>
+        <div class="topbar">
+          <span class="crumb-current">Income Flow · Pay History</span>
+          <div class="spacer"></div>
+          <label class="fy-label" for="fy-select">Finance year</label>
+          <select
+            id="fy-select"
+            class="fy-select"
+            .value=${this.financialYear}
+            @change=${(e: Event) => this._onYearChange(e)}
+          >
+            <option value="">All years</option>
+            ${this._availableYears.map(
+              (y: string) =>
+                html`<option value=${y} ?selected=${y === this.financialYear}>${y}</option>`,
+            )}
+          </select>
+          <button class="filter-btn" @click="${() => this._onAdd()}">+ Add Payslip</button>
+        </div>
 
       <div class="container">
         <h1>Pay History</h1>

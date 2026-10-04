@@ -94,7 +94,7 @@ describe('salary-history activate (Task 12)', () => {
     );
     const manifest = JSON.parse(pkg).financeExtension;
     expect(manifest.contributions.views).toEqual([
-      { id: 'salary', name: 'Salary', icon: 'assets/icon.svg' },
+      { id: 'salary', name: 'Income', icon: 'assets/icon.svg' },
     ]);
     // onStartup keeps the pay service registered before dashboard buildAggregator (cold-start).
     expect(manifest.activationEvents).toEqual(['onStartup', 'onView:salary']);

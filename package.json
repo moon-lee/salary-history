@@ -1,13 +1,13 @@
 {
   "name": "salary-history",
-  "version": "0.1.4",
+  "version": "0.1.7",
   "private": true,
   "type": "module",
   "main": "src/main.ts",
   "financeExtension": {
     "id": "salary-history",
-    "displayName": "Salary History",
-    "version": "0.1.4",
+    "displayName": "Income Flow",
+    "version": "0.1.7",
     "themeColor": "#F59E0B",
     "description": "Payslip entry, derived breakdown, and effective-dated rate history tracking.",
     "activationEvents": [
@@ -18,7 +18,7 @@
       "views": [
         {
           "id": "salary",
-          "name": "Salary",
+          "name": "Income",
           "icon": "assets/icon.svg"
         }
       ],
@@ -35,7 +35,7 @@
         },
         {
           "id": "salary-history.refresh",
-          "title": "Refresh Salary History"
+          "title": "Refresh Income"
         }
       ],
       "allowedCommands": [
@@ -54,14 +54,14 @@
           "id": "salary-pay-history",
           "label": "Pay History",
           "command": "salary.show-pay-history",
-          "group": "Salary",
+          "group": "Income",
           "icon": "H"
         },
         {
           "id": "salary-pay-rate-history",
           "label": "Pay Rate History",
           "command": "salary.show-pay-rate-history",
-          "group": "Salary",
+          "group": "Income",
           "icon": "R"
         }
       ],
@@ -84,7 +84,7 @@
         {
           "key": "salary-history.themeColor",
           "type": "string",
-          "label": "Accent color for Salary History icons and panel highlights (hex).",
+          "label": "Accent color for Income Flow icons and panel highlights (hex).",
           "default": "#F59E0B",
           "pattern": "^#[0-9A-Fa-f]{6}$",
           "formatHint": "#RRGGBB",
